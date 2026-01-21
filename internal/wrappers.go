@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"flag"
 	"fmt"
 	"os"
 	"os/exec"
@@ -128,4 +129,11 @@ func DoBatchWrapper(
 
 	wg.Wait()
 	return selfErr
+}
+
+type FlagFn func(fs *flag.FlagSet, args []string) error
+
+func FlagWrapper(args []string, flagFn FlagFn) error {
+	fs := flag.NewFlagSet(args[1], flag.ContinueOnError)
+	return flagFn(fs, args[2:])
 }
