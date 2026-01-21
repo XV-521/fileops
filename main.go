@@ -12,6 +12,10 @@ import (
 func main() {
 	args := os.Args
 
+	if len(args) < 2 {
+		panic("missing command")
+	}
+
 	switch args[1] {
 	case "highlight":
 		err := internal.FlagWrapper(args, epub.HighlightWithFlags)

@@ -7,13 +7,12 @@ import (
 	"github.com/XV-521/fileops/internal"
 	"os"
 	"path/filepath"
-	"strings"
 )
 
 func DoBatch(md Mode) error {
 	getZipName := func(fileName string) string {
-		baseName := strings.Split(fileName, ".")[0]
-		return fmt.Sprintf("%v.%v", baseName, "zip")
+		basename, _ := internal.GetBasenameAndExt(fileName)
+		return fmt.Sprintf("%v.%v", basename, "zip")
 	}
 
 	bm := internal.BatchMode{

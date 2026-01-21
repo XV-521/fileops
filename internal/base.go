@@ -19,12 +19,7 @@ func Unzip(srcPath string, dstDir string) error {
 
 func Cnv(srcPath string, dstPath string) error {
 	cmd := exec.Command("ffmpeg", "-i", srcPath, dstPath)
-	err := CmdWrapper(cmd)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return CmdWrapper(cmd)
 }
 
 func IsThisExt(filename string, ext string) bool {
