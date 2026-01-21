@@ -25,7 +25,7 @@ func DoBatch(md Mode) error {
 	handler := func(entry os.DirEntry) error {
 		srcPath := filepath.Join(md.SrcDir, entry.Name())
 		dstPath := filepath.Join(md.DstDir, getZipName(entry.Name()))
-		return internal.Zip(srcPath, dstPath)
+		return internal.Zip(srcPath, dstPath, md.Pwd)
 	}
 
 	return internal.DoBatchWrapper(md.SrcDir, bm, filter, handler)
@@ -42,6 +42,12 @@ func DoBatchWithFlags(fs *flag.FlagSet, args []string) error {
 		"dst",
 		"",
 		"Destination directory.",
+	)
+
+	pwd := fs.String(
+		"pwd",
+		"",
+		"Password.",
 	)
 
 	strict := fs.Bool(
@@ -61,6 +67,7 @@ func DoBatchWithFlags(fs *flag.FlagSet, args []string) error {
 	mdPtr := &Mode{
 		SrcDir: *srcDir,
 		DstDir: *dstDir,
+		Pwd:    *pwd,
 		Strict: *strict,
 	}
 

@@ -6,8 +6,13 @@ import (
 	"strings"
 )
 
-func Zip(srcPath string, dstPath string) error {
-	cmd := exec.Command("zip", "-r", dstPath, filepath.Base(srcPath))
+func Zip(srcPath string, dstPath string, pwd string) error {
+	args := []string{"-r"}
+	if pwd != "" {
+		args = append(args, "-P", pwd)
+	}
+	args = append(args, dstPath, filepath.Base(srcPath))
+	cmd := exec.Command("zip", args...)
 	cmd.Dir = filepath.Dir(srcPath)
 	return CmdWrapper(cmd)
 }

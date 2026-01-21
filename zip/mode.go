@@ -8,6 +8,7 @@ import (
 type Mode struct {
 	SrcDir string
 	DstDir string
+	Pwd    string
 	Strict bool
 }
 
