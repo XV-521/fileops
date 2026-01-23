@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 )
 
-func DoBatch(md Mode, nameGen EntryNameGen) error {
+func DoBatch(md Mode) error {
 
 	bm := internal.BatchMode{
 		Async:  false,
@@ -26,9 +26,10 @@ func DoBatch(md Mode, nameGen EntryNameGen) error {
 	}
 
 	handler := func(entry os.DirEntry) error {
+		name := entry.Name()
 		err := os.Rename(
-			filepath.Join(md.SrcDir, entry.Name()),
-			filepath.Join(md.SrcDir, nameGen.Next()),
+			filepath.Join(md.SrcDir, name),
+			filepath.Join(md.SrcDir, md.Namer.Next(name)),
 		)
 		if err != nil {
 			return err
@@ -84,10 +85,5 @@ func DoBatchWithFlags(fs *flag.FlagSet, args []string) error {
 		return err
 	}
 
-	nameGen := EntryNameGen{
-		Basename: *basename,
-		Ext:      *ext,
-	}
-
-	return DoBatch(*mdPtr, nameGen)
+	return DoBatch(*mdPtr)
 }
