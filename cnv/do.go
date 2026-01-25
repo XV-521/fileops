@@ -32,9 +32,9 @@ func DoBatch(md Mode) error {
 	}
 
 	handler := func(entry os.DirEntry) error {
-		iptPath := filepath.Join(md.SrcDir, entry.Name())
-		optPath := filepath.Join(md.DstDir, getNewName(entry.Name()))
-		return internal.Cnv(iptPath, optPath)
+		srcPath := filepath.Join(md.SrcDir, entry.Name())
+		dstPath := filepath.Join(md.DstDir, getNewName(entry.Name()))
+		return internal.Cnv(srcPath, dstPath)
 	}
 
 	return internal.DoBatchWrapper(md.SrcDir, bm, filter, handler)
