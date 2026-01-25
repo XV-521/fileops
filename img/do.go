@@ -25,22 +25,41 @@ func DoBatch(md Mode) error {
 		return true
 	}
 
-	resizeHandler := func(entry os.DirEntry) error {
-		srcPath := filepath.Join(md.SrcDir, entry.Name())
-		dstPath := filepath.Join(md.DstDir, entry.Name())
-		return resize(srcPath, dstPath, md.Rto)
-	}
-	err := internal.DoBatchWrapper(md.SrcDir, bm, filter, resizeHandler)
-	if err != nil {
-		return err
+	dirChanged := false
+	getSrcDir := func() string {
+		if !dirChanged {
+			return md.SrcDir
+		}
+		return md.DstDir
 	}
 
-	changeDpiHandler := func(entry os.DirEntry) error {
-		srcPath := filepath.Join(md.DstDir, entry.Name())
-		dstPath := filepath.Join(md.DstDir, entry.Name())
-		return changeDpi(srcPath, dstPath, md.DPI)
+	if md.Rto != 0 {
+		resizeHandler := func(entry os.DirEntry) error {
+			srcPath := filepath.Join(getSrcDir(), entry.Name())
+			dstPath := filepath.Join(md.DstDir, entry.Name())
+			return resize(srcPath, dstPath, md.Rto)
+		}
+		err := internal.DoBatchWrapper(md.SrcDir, bm, filter, resizeHandler)
+		if err != nil {
+			return err
+		}
+		dirChanged = true
 	}
-	return internal.DoBatchWrapper(md.DstDir, bm, filter, changeDpiHandler)
+
+	if md.DPI != 0 {
+		changeDpiHandler := func(entry os.DirEntry) error {
+			srcPath := filepath.Join(getSrcDir(), entry.Name())
+			dstPath := filepath.Join(md.DstDir, entry.Name())
+			return changeDpi(srcPath, dstPath, md.DPI)
+		}
+		err := internal.DoBatchWrapper(md.DstDir, bm, filter, changeDpiHandler)
+		if err != nil {
+			return err
+		}
+		dirChanged = true
+	}
+
+	return nil
 }
 
 func DoBatchWithFlags(fs *flag.FlagSet, args []string) error {
