@@ -24,11 +24,9 @@ func (md *Mode) Check() error {
 	if md.DstDir == "" {
 		return fmt.Errorf("md.DstDir is empty")
 	}
-
 	if md.FromExt == "" {
 		return fmt.Errorf("md.FromExt is empty")
 	}
-
 	if md.ToExt == "" {
 		return fmt.Errorf("md.ToExt is empty")
 	}
