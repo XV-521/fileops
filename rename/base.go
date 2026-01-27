@@ -17,10 +17,10 @@ type nameGen struct {
 }
 
 func (ng *nameGen) Next(_ os.FileInfo) string {
+	ng.count += 1
 	name := fmt.Sprintf("%v%v", ng.basename, ng.count)
 	if ng.ext != "" {
 		name = fmt.Sprintf("%v.%v", name, strings.Trim(ng.ext, "."))
 	}
-	ng.count += 1
 	return name
 }

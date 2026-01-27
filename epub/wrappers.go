@@ -40,7 +40,7 @@ func packEpub(srcDir string) error {
 func epubWrapper(srcPath string, dstDir string, handler func(srcDir string) error) error {
 
 	wrapper := func(dir string) error {
-		err := internal.Unzip(srcPath, dir)
+		err := internal.Unzip(srcPath, dir, "")
 		if err != nil {
 			return err
 		}

@@ -7,7 +7,7 @@ import (
 )
 
 func Zip(srcPath string, dstPath string, pwd string) error {
-	args := []string{"-r"}
+	args := []string{"-r", "-X"}
 	if pwd != "" {
 		args = append(args, "-P", pwd)
 	}
@@ -17,8 +17,13 @@ func Zip(srcPath string, dstPath string, pwd string) error {
 	return CmdWrapper(cmd)
 }
 
-func Unzip(srcPath string, dstDir string) error {
-	cmd := exec.Command("unzip", srcPath, "-d", dstDir)
+func Unzip(srcPath string, dstDir string, pwd string) error {
+	var args []string
+	if pwd != "" {
+		args = append(args, "-P", pwd)
+	}
+	args = append(args, srcPath, "-d", dstDir)
+	cmd := exec.Command("unzip", args...)
 	return CmdWrapper(cmd)
 }
 
@@ -32,7 +37,7 @@ func IsThisExt(filename string, ext string) bool {
 	if len(result) < 2 {
 		return ext == ""
 	}
-	return result[len(result)-1] == ext
+	return strings.ToLower(result[len(result)-1]) == strings.ToLower(ext)
 }
 
 func GetBasenameAndExt(filename string) (baseName string, ext string) {
