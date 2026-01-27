@@ -32,9 +32,9 @@ func (md *Mode) Check() error {
 
 func (md *Mode) Normalize() (*Mode, error) {
 	if md.Namer == nil {
-		md.Namer = &NameGen{
-			Basename: md.Basename,
-			Ext:      md.Ext,
+		md.Namer = &nameGen{
+			basename: md.Basename,
+			ext:      md.Ext,
 		}
 	}
 	return md, nil

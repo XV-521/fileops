@@ -26,10 +26,14 @@ func DoBatch(md Mode) error {
 	}
 
 	handler := func(entry os.DirEntry) error {
-		name := entry.Name()
-		err := os.Rename(
-			filepath.Join(md.SrcDir, name),
-			filepath.Join(md.SrcDir, md.Namer.Next(name)),
+		info, err := entry.Info()
+		if err != nil {
+			return err
+		}
+
+		err = os.Rename(
+			filepath.Join(md.SrcDir, info.Name()),
+			filepath.Join(md.SrcDir, md.Namer.Next(info)),
 		)
 		if err != nil {
 			return err
