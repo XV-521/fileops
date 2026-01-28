@@ -9,14 +9,20 @@ import (
 	"path/filepath"
 )
 
-func DoBatch(md Mode) error {
+func DoBatch(md *Mode) error {
+
+	md, err := internal.Prepare(md)
+	if err != nil {
+		return err
+	}
+
 	getZipName := func(fileName string) string {
 		basename, _ := internal.GetBasenameAndExt(fileName)
 		return fmt.Sprintf("%v.%v", basename, "zip")
 	}
 
 	bm := internal.BatchMode{
-		Async:  true,
+		Sem:    10,
 		Strict: md.Strict,
 	}
 
@@ -64,17 +70,12 @@ func DoBatchWithFlags(fs *flag.FlagSet, args []string) error {
 		return err
 	}
 
-	mdPtr := &Mode{
+	md := &Mode{
 		SrcDir: *srcDir,
 		DstDir: *dstDir,
 		Pwd:    *pwd,
 		Strict: *strict,
 	}
 
-	mdPtr, err = internal.Prepare(mdPtr)
-	if err != nil {
-		return err
-	}
-
-	return DoBatch(*mdPtr)
+	return DoBatch(md)
 }

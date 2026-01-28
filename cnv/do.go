@@ -10,14 +10,19 @@ import (
 	"strings"
 )
 
-func DoBatch(md Mode) error {
+func DoBatch(md *Mode) error {
+	md, err := internal.Prepare(md)
+	if err != nil {
+		return err
+	}
+
 	getNewName := func(filename string) string {
 		basename, _ := internal.GetBasenameAndExt(filename)
 		return fmt.Sprintf("%v.%v", basename, strings.Trim(md.ToExt, "."))
 	}
 
 	bm := internal.BatchMode{
-		Async:  true,
+		Sem:    6,
 		Strict: md.Strict,
 	}
 
@@ -79,7 +84,7 @@ func DoBatchWithFlags(fs *flag.FlagSet, args []string) error {
 		return err
 	}
 
-	mdPtr := &Mode{
+	md := &Mode{
 		SrcDir:  *srcDir,
 		DstDir:  *dstDir,
 		FromExt: *fromExt,
@@ -87,10 +92,5 @@ func DoBatchWithFlags(fs *flag.FlagSet, args []string) error {
 		Strict:  *strict,
 	}
 
-	mdPtr, err = internal.Prepare(mdPtr)
-	if err != nil {
-		return err
-	}
-
-	return DoBatch(*mdPtr)
+	return DoBatch(md)
 }

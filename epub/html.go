@@ -13,7 +13,7 @@ import (
 	"strings"
 )
 
-func generateCSS(dstPath string, md Mode) error {
+func generateCSS(dstPath string, md *Mode) error {
 
 	cmd := exec.Command("pygmentize", "-f", "html", "-S", md.Style)
 
@@ -83,7 +83,7 @@ func getHtmlContent(codeNode string) (string, error) {
 	return buf.String(), nil
 }
 
-func getHighlightedHtml(html string, md Mode) string {
+func getHighlightedHtml(html string, md *Mode) string {
 	highlightCode := func(code string) (string, error) {
 		cmd := exec.Command("pygmentize", "-l", md.Lang, "-f", "html")
 
@@ -184,7 +184,7 @@ func highlightHtml(
 	srcPath string,
 	dstPath string,
 	cssPath string,
-	md Mode,
+	md *Mode,
 ) error {
 	data, err := os.ReadFile(srcPath)
 	if err != nil {
@@ -231,11 +231,11 @@ func generateOpf(srcPath string, cssPath string) error {
 func highlightAllHtml(
 	srcDir string,
 	cssPath string,
-	md Mode,
+	md *Mode,
 ) error {
 
 	bm := internal.BatchMode{
-		Async:  true,
+		Sem:    8,
 		Strict: md.Strict,
 	}
 
@@ -265,7 +265,7 @@ func highlightAllHtml(
 
 func HighlightAllHtml(
 	srcDir string,
-	md Mode,
+	md *Mode,
 ) error {
 
 	cssPath := filepath.Join(srcDir, md.CssBasename)

@@ -2,9 +2,8 @@ package epub
 
 import (
 	"fmt"
-	"math/rand"
+	"github.com/XV-521/fileops/internal"
 	"path/filepath"
-	"strconv"
 )
 
 type Mode struct {
@@ -36,12 +35,8 @@ func (md *Mode) Normalize() (*Mode, error) {
 
 	if md.DstDir == "" {
 		dir := filepath.Dir(md.SrcPath)
-		basename := "inner"
-		for range 6 {
-			num := rand.Intn(10)
-			basename += strconv.Itoa(num)
-		}
-		md.DstDir = filepath.Join(dir, basename)
+		name := "inner" + internal.GetRand(6)
+		md.DstDir = filepath.Join(dir, name)
 	}
 
 	if md.Style == "" {
@@ -49,12 +44,8 @@ func (md *Mode) Normalize() (*Mode, error) {
 	}
 
 	if md.CssBasename == "" {
-		basename := "highlight"
-		for range 6 {
-			num := rand.Intn(10)
-			basename += strconv.Itoa(num)
-		}
-		md.CssBasename = fmt.Sprintf("%v%v", basename, ".css")
+		name := "highlight" + internal.GetRand(6)
+		md.CssBasename = fmt.Sprintf("%v%v", name, ".css")
 	}
 
 	return md, nil

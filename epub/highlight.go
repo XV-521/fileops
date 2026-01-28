@@ -55,7 +55,12 @@ func getOpsBaseName(data []byte) (string, error) {
 	return "", fmt.Errorf("could not find the ops dir")
 }
 
-func Highlight(md Mode) error {
+func Highlight(md *Mode) error {
+
+	md, err := internal.Prepare(md)
+	if err != nil {
+		return err
+	}
 
 	handler := func(tmpDir string) error {
 
@@ -141,7 +146,7 @@ func HighlightWithFlags(fs *flag.FlagSet, args []string) error {
 		return err
 	}
 
-	mdPtr := &Mode{
+	md := &Mode{
 		SrcPath:        *srcPath,
 		DstDir:         *dstDir,
 		Strict:         *strict,
@@ -152,11 +157,5 @@ func HighlightWithFlags(fs *flag.FlagSet, args []string) error {
 		BgColor:        *bgColor,
 	}
 
-	mdPtr, err = internal.Prepare(mdPtr)
-
-	if err != nil {
-		return err
-	}
-
-	return Highlight(*mdPtr)
+	return Highlight(md)
 }

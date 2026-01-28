@@ -8,14 +8,7 @@ import (
 )
 
 func CmdWrapper(cmd *exec.Cmd) error {
-	cmd.Stdin = nil
-
-	out, err := cmd.CombinedOutput()
-	if err != nil {
-		fmt.Printf("failed: %v", string(out))
-		return err
-	}
-	return nil
+	return cmd.Run()
 }
 
 // MkdirTempWrapper is used to create a temporary directory.
@@ -46,7 +39,7 @@ func MkdirTempWrapper(finalPath string, fn func(dir string) error) error {
 }
 
 type BatchMode struct {
-	Async  bool
+	Sem    int
 	Strict bool
 }
 
@@ -57,37 +50,22 @@ func DoBatchWrapper(
 	entryFn func(entry os.DirEntry) error,
 ) error {
 
-	entries, err := os.ReadDir(srcDir)
-
-	if err != nil {
-		return err
+	if mode.Sem == 0 {
+		return fmt.Errorf("mode.Sem is 0")
 	}
 
-	if !mode.Async {
-		for _, entry := range entries {
-
-			if !filter(entry) {
-				fmt.Printf("skipped %s\n", entry.Name())
-				continue
-			}
-
-			firstErr := entryFn(entry)
-			if firstErr != nil {
-				fmt.Printf("%v: %v\n", entry.Name(), firstErr)
-
-				if mode.Strict {
-					return firstErr
-				}
-			}
-		}
-		return nil
+	entries, err := os.ReadDir(srcDir)
+	if err != nil {
+		return err
 	}
 
 	var wg sync.WaitGroup
 	var once sync.Once
 	var mu sync.Mutex
 	var selfErr error
+
 	done := make(chan struct{})
+	sem := make(chan struct{}, mode.Sem)
 
 	for _, entry := range entries {
 
@@ -105,12 +83,15 @@ func DoBatchWrapper(
 			select {
 			case <-done:
 				return
-			default:
+			case sem <- struct{}{}:
 			}
 
+			defer func() { <-sem }()
+
 			firstErr := entryFn(entry)
+
 			if firstErr != nil {
-				fmt.Printf("%v: %v\n", entry.Name(), firstErr)
+				fmt.Printf("failed %s: %v\n", entry.Name(), firstErr)
 
 				mu.Lock()
 				if selfErr == nil {
@@ -127,5 +108,6 @@ func DoBatchWrapper(
 	}
 
 	wg.Wait()
+
 	return selfErr
 }

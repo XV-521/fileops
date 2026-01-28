@@ -1,8 +1,10 @@
 package internal
 
 import (
+	"math/rand"
 	"os/exec"
 	"path/filepath"
+	"strconv"
 	"strings"
 )
 
@@ -28,7 +30,13 @@ func Unzip(srcPath string, dstDir string, pwd string) error {
 }
 
 func Cnv(srcPath string, dstPath string) error {
-	cmd := exec.Command("ffmpeg", "-i", srcPath, dstPath)
+	cmd := exec.Command(
+		"ffmpeg",
+		"-hwaccel", "videotoolbox",
+		"-i", srcPath,
+		"-c:v", "h264_videotoolbox",
+		dstPath,
+	)
 	return CmdWrapper(cmd)
 }
 
@@ -47,4 +55,13 @@ func GetBasenameAndExt(filename string) (baseName string, ext string) {
 		return filename, ""
 	}
 	return strings.Join(result[0:length-1], "."), result[length-1]
+}
+
+func GetRand(digit int) string {
+	result := ""
+	for range digit {
+		num := rand.Intn(10)
+		result += strconv.Itoa(num)
+	}
+	return result
 }
