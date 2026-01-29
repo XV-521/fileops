@@ -74,3 +74,17 @@ func GetUnzipFn(zt ZipType) (UnzipFn, error) {
 		return nil, UnsupportedUnzipTypeErr
 	}
 }
+
+func CreateZipExt(zt ZipType) (string, error) {
+	switch zt {
+	case ZipB:
+		return "zip", nil
+	case ZipS:
+		return "7z", nil
+	case ZipT:
+
+		return "tar.gz", nil
+	default:
+		return "", UnsupportedZipTypeErr
+	}
+}

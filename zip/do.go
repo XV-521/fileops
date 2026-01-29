@@ -17,9 +17,11 @@ func DoBatch(md *Mode) error {
 		return err
 	}
 
+	ext, err := public.CreateZipExt(md.ZT)
+
 	getZipName := func(fileName string) string {
 		basename, _ := internal.GetBasenameAndExt(fileName)
-		return fmt.Sprintf("%v.%v", basename, "zip")
+		return fmt.Sprintf("%v.%v", basename, ext)
 	}
 
 	bm := internal.BatchMode{
@@ -27,7 +29,7 @@ func DoBatch(md *Mode) error {
 		Strict: md.Strict,
 	}
 
-	filter := func(entry os.DirEntry) bool { return true }
+	filter := func(entry os.DirEntry) bool { return entry.Name() != ".DS_Store" }
 
 	zipFn, err := public.GetZipFn(md.ZT)
 	if err != nil {

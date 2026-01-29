@@ -22,7 +22,12 @@ func DoBatch(md *Mode) error {
 	}
 
 	filter := func(entry os.DirEntry) bool {
-		return internal.IsThisExt(entry.Name(), "zip")
+		name := entry.Name()
+		zt := public.GetZipType(name)
+		if zt == public.ZipUn {
+			return false
+		}
+		return true
 	}
 
 	handler := func(entry os.DirEntry) error {
