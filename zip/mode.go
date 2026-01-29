@@ -30,6 +30,10 @@ func (md *Mode) Check() error {
 		return public.UnsupportedZipTypeErr
 	}
 
+	if md.ZT == public.ZipT && md.Pwd != "" {
+		return fmt.Errorf("md.ZT is ZipT (tar), but md.pwd is not empty")
+	}
+
 	return nil
 }
 
