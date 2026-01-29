@@ -30,8 +30,7 @@ func SevenZip(srcPath string, dstPath string, pwd string) error {
 	return CmdWrapper(cmd)
 }
 
-func TarZip(srcPath string, dstPath string, pwd string) error {
-	_ = pwd
+func TarZip(srcPath string, dstPath string, _ string) error {
 	args := []string{
 		"-czf", dstPath,
 		"--exclude=.DS_Store",
