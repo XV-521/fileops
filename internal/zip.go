@@ -33,13 +33,9 @@ func SevenZip(srcPath string, dstPath string, pwd string) error {
 func TarZip(srcPath string, dstPath string, pwd string) error {
 	_ = pwd
 	args := []string{
-		"-cz",
+		"-czf", dstPath,
 		"--exclude=.DS_Store",
 		"--exclude=__MACOSX",
-		"--no-xattrs",
-		"--no-acls",
-		"--no-selinux",
-		"-f", dstPath,
 		filepath.Base(srcPath),
 	}
 	cmd := exec.Command("tar", args...)
