@@ -17,7 +17,7 @@ func Zip(srcPath string, dstPath string, pwd string) error {
 }
 
 func SevenZip(srcPath string, dstPath string, pwd string) error {
-	args := []string{"a"}
+	args := []string{"a", "-xr!.DS_Store", "-xr!__MACOSX"}
 
 	if pwd != "" {
 		args = append(args, "-p"+pwd, "-mhe=on")
@@ -32,7 +32,16 @@ func SevenZip(srcPath string, dstPath string, pwd string) error {
 
 func TarZip(srcPath string, dstPath string, pwd string) error {
 	_ = pwd
-	args := []string{"-czf", dstPath, filepath.Base(srcPath)}
+	args := []string{
+		"-czf",
+		dstPath,
+		"--exclude=.DS_Store",
+		"--exclude=__MACOSX",
+		"--no-xattrs",
+		"--no-acls",
+		"--no-selinux",
+		filepath.Base(srcPath),
+	}
 	cmd := exec.Command("tar", args...)
 	cmd.Dir = filepath.Dir(srcPath)
 	return CmdWrapper(cmd)
