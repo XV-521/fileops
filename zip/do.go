@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/XV-521/fileops/internal"
+	"github.com/XV-521/fileops/public"
 	"os"
 	"path/filepath"
 )
@@ -28,10 +29,15 @@ func DoBatch(md *Mode) error {
 
 	filter := func(entry os.DirEntry) bool { return true }
 
+	zipFn, err := public.GetZipFn(md.ZT)
+	if err != nil {
+		return err
+	}
+
 	handler := func(entry os.DirEntry) error {
 		srcPath := filepath.Join(md.SrcDir, entry.Name())
 		dstPath := filepath.Join(md.DstDir, getZipName(entry.Name()))
-		return internal.Zip(srcPath, dstPath, md.Pwd)
+		return zipFn(srcPath, dstPath, md.Pwd)
 	}
 
 	return internal.DoBatchWrapper(md.SrcDir, bm, filter, handler)
@@ -56,6 +62,15 @@ func DoBatchWithFlags(fs *flag.FlagSet, args []string) error {
 		"Password.",
 	)
 
+	zt := fs.Int(
+		"zt",
+		int(public.ZipUn),
+		fmt.Sprintf(
+			"Zip type: { %v: zip, %v: 7z, %v: tar }",
+			public.ZipB, public.ZipS, public.ZipT,
+		),
+	)
+
 	strict := fs.Bool(
 		"strict",
 		false,
@@ -73,6 +88,7 @@ func DoBatchWithFlags(fs *flag.FlagSet, args []string) error {
 	md := &Mode{
 		SrcDir: *srcDir,
 		DstDir: *dstDir,
+		ZT:     public.ZipType(*zt),
 		Pwd:    *pwd,
 		Strict: *strict,
 	}

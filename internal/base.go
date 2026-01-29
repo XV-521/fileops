@@ -2,43 +2,9 @@ package internal
 
 import (
 	"math/rand"
-	"os/exec"
-	"path/filepath"
 	"strconv"
 	"strings"
 )
-
-func Zip(srcPath string, dstPath string, pwd string) error {
-	args := []string{"-r", "-X"}
-	if pwd != "" {
-		args = append(args, "-P", pwd)
-	}
-	args = append(args, dstPath, filepath.Base(srcPath))
-	cmd := exec.Command("zip", args...)
-	cmd.Dir = filepath.Dir(srcPath)
-	return CmdWrapper(cmd)
-}
-
-func Unzip(srcPath string, dstDir string, pwd string) error {
-	var args []string
-	if pwd != "" {
-		args = append(args, "-P", pwd)
-	}
-	args = append(args, srcPath, "-d", dstDir)
-	cmd := exec.Command("unzip", args...)
-	return CmdWrapper(cmd)
-}
-
-func Cnv(srcPath string, dstPath string) error {
-	cmd := exec.Command(
-		"ffmpeg",
-		"-hwaccel", "videotoolbox",
-		"-i", srcPath,
-		"-c:v", "h264_videotoolbox",
-		dstPath,
-	)
-	return CmdWrapper(cmd)
-}
 
 func IsThisExt(filename string, ext string) bool {
 	result := strings.Split(filename, ".")

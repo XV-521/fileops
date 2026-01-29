@@ -2,12 +2,14 @@ package zip
 
 import (
 	"fmt"
+	"github.com/XV-521/fileops/public"
 	"os"
 )
 
 type Mode struct {
 	SrcDir string
 	DstDir string
+	ZT     public.ZipType
 	Pwd    string
 	Strict bool
 }
@@ -23,10 +25,16 @@ func (md *Mode) Check() error {
 	if md.DstDir == "" {
 		return fmt.Errorf("md.dstDir is empty")
 	}
+
+	if md.ZT == public.ZipUn || md.ZT == public.ZipR {
+		return public.UnsupportedZipTypeErr
+	}
+
 	return nil
 }
 
 func (md *Mode) Normalize() (*Mode, error) {
+
 	_, err := os.Stat(md.DstDir)
 	if os.IsNotExist(err) {
 		err = os.Mkdir(md.DstDir, 0777)
@@ -34,5 +42,6 @@ func (md *Mode) Normalize() (*Mode, error) {
 			return nil, err
 		}
 	}
+
 	return md, nil
 }

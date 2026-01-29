@@ -4,6 +4,7 @@ import (
 	"errors"
 	"flag"
 	"github.com/XV-521/fileops/internal"
+	"github.com/XV-521/fileops/public"
 	"os"
 	"path/filepath"
 )
@@ -25,8 +26,14 @@ func DoBatch(md *Mode) error {
 	}
 
 	handler := func(entry os.DirEntry) error {
-		srcPath := filepath.Join(md.SrcDir, entry.Name())
-		return internal.Unzip(srcPath, md.DstDir, md.Pwd)
+		name := entry.Name()
+		srcPath := filepath.Join(md.SrcDir, name)
+		zt := public.GetZipType(name)
+		unzipFn, err := public.GetUnzipFn(zt)
+		if err != nil {
+			return err
+		}
+		return unzipFn(srcPath, md.DstDir, md.Pwd)
 	}
 
 	return internal.DoBatchWrapper(md.SrcDir, bm, filter, handler)
