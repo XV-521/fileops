@@ -243,6 +243,13 @@ func highlightAllHtml(
 		if entry.IsDir() {
 			return false
 		}
+
+		filename := entry.Name()
+		if !(internal.IsThisExt(filename, "html") ||
+			internal.IsThisExt(filename, "xhtml") ||
+			internal.IsThisExt(filename, "opf")) {
+			return false
+		}
 		return true
 	}
 

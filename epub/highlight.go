@@ -100,7 +100,7 @@ func HighlightWithFlags(fs *flag.FlagSet, args []string) error {
 	srcPath := fs.String(
 		"src",
 		"",
-		"Source EPUB file or directory.",
+		"Source EPUB file.",
 	)
 	dstDir := fs.String(
 		"dst",
@@ -130,7 +130,7 @@ func HighlightWithFlags(fs *flag.FlagSet, args []string) error {
 	style := fs.String(
 		"style",
 		"nord",
-		"Highlight style.",
+		"Highlight style. Recommended: xcode (none), trac (none), dracula (#282A36), gruvbox-dark (#282828)",
 	)
 	bgColor := fs.String(
 		"bg",
