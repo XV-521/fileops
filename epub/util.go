@@ -4,16 +4,15 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/XV-521/fileops/v2/core"
+	"github.com/XV-521/fileops/v2/internal/impl"
+	"github.com/XV-521/fileops/v2/internal/util"
+	goHtml "golang.org/x/net/html"
 	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"regexp"
 	"strings"
-
-	"github.com/XV-521/fileops/v2/internal/impl"
-	"github.com/XV-521/fileops/v2/internal/util"
-	goHtml "golang.org/x/net/html"
 )
 
 func generateCSS(dstPath string, md *Mode) error {
