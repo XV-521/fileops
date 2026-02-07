@@ -3,7 +3,7 @@ package epub
 import (
 	"bytes"
 	"fmt"
-	"github.com/XV-521/fileops/core"
+	"github.com/XV-521/fileops/v2/core"
 	"io"
 	"os"
 	"os/exec"
@@ -11,8 +11,8 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/XV-521/fileops/internal/impl"
-	"github.com/XV-521/fileops/internal/util"
+	"github.com/XV-521/fileops/v2/internal/impl"
+	"github.com/XV-521/fileops/v2/internal/util"
 	goHtml "golang.org/x/net/html"
 )
 

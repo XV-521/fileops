@@ -1,7 +1,7 @@
 package epub
 
 import (
-	"github.com/XV-521/fileops/internal/util"
+	"github.com/XV-521/fileops/v2/internal/util"
 	"os"
 	"os/exec"
 )

@@ -2,8 +2,8 @@ package cnv
 
 import (
 	"fmt"
-	"github.com/XV-521/fileops/core/mode"
-	"github.com/XV-521/fileops/internal/util"
+	"github.com/XV-521/fileops/v2/core/mode"
+	"github.com/XV-521/fileops/v2/internal/util"
 	"os"
 )
 

@@ -4,10 +4,10 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"github.com/XV-521/fileops/core"
-	"github.com/XV-521/fileops/core/mode"
-	"github.com/XV-521/fileops/internal/impl"
-	"github.com/XV-521/fileops/internal/util"
+	"github.com/XV-521/fileops/v2/core"
+	"github.com/XV-521/fileops/v2/core/mode"
+	"github.com/XV-521/fileops/v2/internal/impl"
+	"github.com/XV-521/fileops/v2/internal/util"
 	"path/filepath"
 )
 

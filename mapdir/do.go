@@ -3,8 +3,8 @@ package mapdir
 import (
 	"errors"
 	"flag"
-	"github.com/XV-521/fileops/internal/impl"
-	"github.com/XV-521/fileops/internal/util"
+	"github.com/XV-521/fileops/v2/internal/impl"
+	"github.com/XV-521/fileops/v2/internal/util"
 )
 
 func Do(md *Mode) error {

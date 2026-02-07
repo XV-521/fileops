@@ -2,7 +2,7 @@ package impl
 
 import (
 	"fmt"
-	"github.com/XV-521/fileops/core"
+	"github.com/XV-521/fileops/v2/core"
 	"os"
 	"sync"
 )

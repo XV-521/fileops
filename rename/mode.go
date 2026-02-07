@@ -2,8 +2,8 @@ package rename
 
 import (
 	"fmt"
-	"github.com/XV-521/fileops/core"
-	"github.com/XV-521/fileops/internal/util"
+	"github.com/XV-521/fileops/v2/core"
+	"github.com/XV-521/fileops/v2/internal/util"
 	"os"
 )
 
