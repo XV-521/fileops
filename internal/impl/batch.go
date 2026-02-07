@@ -69,7 +69,7 @@ func DoBatchWrap(
 			}
 
 			if !filter(ei) {
-				out.Skip.Printf("skipped %v\n", ei.Path())
+				out.Norm.Printf("skipped %v\n", ei.Path())
 				continue
 			}
 

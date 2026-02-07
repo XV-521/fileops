@@ -39,7 +39,7 @@ func (r Render) Printf(format string, a ...any) {
 }
 
 var (
-	Skip Render = "\033[37m"
-	Warn Render = "\033[33m"
-	Fail Render = "\033[31m"
+	Norm Render = ""
+	Warn Render = "\033[38;5;63m"
+	Fail Render = "\033[38;5;1m"
 )
