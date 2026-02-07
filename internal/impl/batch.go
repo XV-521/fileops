@@ -91,7 +91,7 @@ func DoBatchWrap(
 
 				if firstErr != nil {
 					if !mode.Strict {
-						out.Warn.Printf("failed %v: %v\n", ei.Path(), firstErr)
+						out.Warn.Printf("failed %v\n%v\n", ei.Path(), firstErr)
 					}
 
 					mu.Lock()
