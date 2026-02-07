@@ -3,6 +3,7 @@ package impl
 import (
 	"fmt"
 	"github.com/XV-521/fileops/v2/core"
+	"github.com/XV-521/fileops/v2/core/out"
 	"os"
 	"sync"
 )
@@ -68,7 +69,7 @@ func DoBatchWrapper(
 			}
 
 			if !filter(ei) {
-				fmt.Printf("skipped %v\n", ei.Path())
+				out.Skip.Printf("skipped %v\n", ei.Path())
 				continue
 			}
 
@@ -89,7 +90,9 @@ func DoBatchWrapper(
 				firstErr := entryFn(ei)
 
 				if firstErr != nil {
-					fmt.Printf("failed %v: %v\n", ei.Path(), firstErr)
+					if !mode.Strict {
+						out.Warn.Printf("failed %v: %v\n", ei.Path(), firstErr)
+					}
 
 					mu.Lock()
 					if selfErr == nil {

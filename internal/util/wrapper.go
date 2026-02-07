@@ -12,7 +12,7 @@ func CmdWrapper(cmd *exec.Cmd) error {
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		return fmt.Errorf(
-			"cmd failed: %s %v\n%s",
+			"cmd failed:\npath: %v\nargs: %v\noutput:\n%s",
 			cmd.Path,
 			cmd.Args,
 			string(out),
