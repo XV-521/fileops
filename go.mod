@@ -1,4 +1,4 @@
-module github.com/XV-521/fileops
+module github.com/XV-521/fileops/v2
 
 go 1.24.0
 
