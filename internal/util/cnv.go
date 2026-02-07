@@ -15,7 +15,7 @@ func CnvForVideo(srcPath, dstPath string) error {
 		"-movflags", "+faststart",
 		dstPath,
 	)
-	return CmdWrapper(cmd)
+	return CmdWrap(cmd)
 }
 
 func CnvForAudio(srcPath, dstPath string) error {
@@ -27,7 +27,7 @@ func CnvForAudio(srcPath, dstPath string) error {
 		"-c:a", "aac",
 		dstPath,
 	)
-	return CmdWrapper(cmd)
+	return CmdWrap(cmd)
 }
 
 func CnvForImage(srcPath string, dstPath string) error {
@@ -37,5 +37,5 @@ func CnvForImage(srcPath string, dstPath string) error {
 		"-i", srcPath,
 		dstPath,
 	)
-	return CmdWrapper(cmd)
+	return CmdWrap(cmd)
 }

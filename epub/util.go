@@ -269,7 +269,7 @@ func highlightAllHtml(
 		return nil
 	}
 
-	return impl.DoBatchWrapper(srcDir, bm, filter, handler)
+	return impl.DoBatchWrap(srcDir, bm, filter, handler)
 }
 
 func HighlightAllHtml(

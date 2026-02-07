@@ -14,7 +14,7 @@ type BatchMode struct {
 	Rec    bool
 }
 
-func DoBatchWrapper(
+func DoBatchWrap(
 	srcDir string,
 	mode BatchMode,
 	filter func(ei core.EntryInfo) bool,

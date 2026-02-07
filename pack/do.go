@@ -44,7 +44,7 @@ func DoBatch(md *Mode) error {
 		return zipFn(ei.Path(), dstPath, md.Pwd)
 	}
 
-	return impl.DoBatchWrapper(md.SrcDir, bm, filter, handler)
+	return impl.DoBatchWrap(md.SrcDir, bm, filter, handler)
 }
 
 func DoBatchWithFlags(fs *flag.FlagSet, args []string) error {

@@ -92,7 +92,7 @@ func Highlight(md *Mode) error {
 		return HighlightAllHtml(targetDir, md)
 	}
 
-	return epubWrapper(md.SrcPath, md.DstDir, handler)
+	return epubWrap(md.SrcPath, md.DstDir, handler)
 }
 
 func HighlightWithFlags(fs *flag.FlagSet, args []string) error {

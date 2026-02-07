@@ -6,7 +6,7 @@ import (
 	"os/exec"
 )
 
-func CmdWrapper(cmd *exec.Cmd) error {
+func CmdWrap(cmd *exec.Cmd) error {
 	cmd.Stdin = nil
 
 	out, err := cmd.CombinedOutput()
@@ -21,13 +21,13 @@ func CmdWrapper(cmd *exec.Cmd) error {
 	return nil
 }
 
-// MkdirTempWrapper is used to create a temporary directory.
+// MkdirTempWrap is used to create a temporary directory.
 // It accepts a fn and executes it. if the err value returned by fn is nil,
 //
 // fn: The func that need to be executed after creating the directory.
 //
-// dir of fn: In MkdirTempWrapper, the tmpDir will be passed to fn as dir.
-func MkdirTempWrapper(fn func(dir string) error) error {
+// dir of fn: In MkdirTempWrap, the tmpDir will be passed to fn as dir.
+func MkdirTempWrap(fn func(dir string) error) error {
 	tmpDir, err := os.MkdirTemp("", "temp-*")
 	if err != nil {
 		return err

@@ -9,7 +9,7 @@ import (
 func packEpub(srcDir string) error {
 	cmd0 := exec.Command("zip", "-X0", "./new.epub", "mimetype")
 	cmd0.Dir = srcDir
-	if err := util.CmdWrapper(cmd0); err != nil {
+	if err := util.CmdWrap(cmd0); err != nil {
 		return err
 	}
 
@@ -29,7 +29,7 @@ func packEpub(srcDir string) error {
 	cmd1 := exec.Command("zip", args...)
 	cmd1.Dir = srcDir
 
-	err = util.CmdWrapper(cmd1)
+	err = util.CmdWrap(cmd1)
 	if err != nil {
 		return err
 	}
@@ -37,7 +37,7 @@ func packEpub(srcDir string) error {
 	return nil
 }
 
-func epubWrapper(srcPath string, dstDir string, handler func(srcDir string) error) error {
+func epubWrap(srcPath string, dstDir string, handler func(srcDir string) error) error {
 
 	wrapper := func(dir string) error {
 		err := util.UnSeven(srcPath, dir, "")
@@ -55,7 +55,7 @@ func epubWrapper(srcPath string, dstDir string, handler func(srcDir string) erro
 		return os.Rename(dir, dstDir)
 	}
 
-	err := util.MkdirTempWrapper(wrapper)
+	err := util.MkdirTempWrap(wrapper)
 	if err != nil {
 		return err
 	}

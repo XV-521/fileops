@@ -16,7 +16,7 @@ func Zip(srcPath string, dstPath string, pwd string) error {
 
 	cmd := exec.Command("7z", args...)
 	cmd.Dir = filepath.Dir(srcPath)
-	return CmdWrapper(cmd)
+	return CmdWrap(cmd)
 }
 
 func Seven(srcPath string, dstPath string, pwd string) error {
@@ -30,7 +30,7 @@ func Seven(srcPath string, dstPath string, pwd string) error {
 
 	cmd := exec.Command("7z", args...)
 	cmd.Dir = filepath.Dir(srcPath)
-	return CmdWrapper(cmd)
+	return CmdWrap(cmd)
 }
 
 func Tar(srcPath string, dstPath string, _ string) error {
@@ -42,7 +42,7 @@ func Tar(srcPath string, dstPath string, _ string) error {
 	}
 	cmd := exec.Command("tar", args...)
 	cmd.Dir = filepath.Dir(srcPath)
-	return CmdWrapper(cmd)
+	return CmdWrap(cmd)
 }
 
 // Deprecated: use SevenUnzip instead.
@@ -53,7 +53,7 @@ func Unzip(srcPath string, dstDir string, pwd string) error {
 	}
 	args = append(args, srcPath, "-d", dstDir)
 	cmd := exec.Command("unzip", args...)
-	return CmdWrapper(cmd)
+	return CmdWrap(cmd)
 }
 
 func UnSeven(srcPath string, dstDir string, pwd string) error {
@@ -62,13 +62,13 @@ func UnSeven(srcPath string, dstDir string, pwd string) error {
 		args = append(args, "-p"+pwd)
 	}
 	cmd := exec.Command("7z", args...)
-	return CmdWrapper(cmd)
+	return CmdWrap(cmd)
 }
 
 func UnTar(srcPath string, dstDir string, _ string) error {
 	args := []string{"-xf", srcPath, "-C", dstDir}
 	cmd := exec.Command("tar", args...)
-	return CmdWrapper(cmd)
+	return CmdWrap(cmd)
 }
 
 func UnRar(srcPath string, dstDir string, pwd string) error {
@@ -78,5 +78,5 @@ func UnRar(srcPath string, dstDir string, pwd string) error {
 	}
 
 	cmd := exec.Command("unar", args...)
-	return CmdWrapper(cmd)
+	return CmdWrap(cmd)
 }

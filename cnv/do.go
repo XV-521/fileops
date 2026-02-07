@@ -67,7 +67,7 @@ func DoBatch(md *Mode) error {
 		return cvFn(ei.Path(), dstPath)
 	}
 
-	return impl.DoBatchWrapper(md.SrcDir, bm, filter, handler)
+	return impl.DoBatchWrap(md.SrcDir, bm, filter, handler)
 }
 
 func DoBatchWithFlags(fs *flag.FlagSet, args []string) error {
