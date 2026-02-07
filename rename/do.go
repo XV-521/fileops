@@ -3,50 +3,44 @@ package rename
 import (
 	"errors"
 	"flag"
-	"github.com/XV-521/fileops/internal"
+	"github.com/XV-521/fileops/core"
+	"github.com/XV-521/fileops/internal/impl"
+	"github.com/XV-521/fileops/internal/util"
 	"os"
 	"path/filepath"
 )
 
 func DoBatch(md *Mode) error {
 
-	md, err := internal.Prepare(md)
+	md, err := impl.Prepare(md)
 	if err != nil {
 		return err
 	}
 
-	bm := internal.BatchMode{
+	bm := impl.BatchMode{
 		Sem:    1,
+		Rec:    md.Rec,
 		Strict: md.Strict,
 	}
 
-	filter := func(entry os.DirEntry) bool {
-		if entry.IsDir() {
+	filter := func(ei core.EntryInfo) bool {
+		if ei.IsDir() {
 			return false
 		}
-		if !internal.IsThisExt(entry.Name(), md.Ext) {
+		if !util.IsThisExt(ei.Name(), md.Ext) {
 			return false
 		}
 		return true
 	}
 
-	handler := func(entry os.DirEntry) error {
-		info, err := entry.Info()
-		if err != nil {
-			return err
-		}
-
-		err = os.Rename(
-			filepath.Join(md.SrcDir, info.Name()),
-			filepath.Join(md.SrcDir, md.Namer.Next(info)),
+	handler := func(ei core.EntryInfo) error {
+		return os.Rename(
+			ei.Path(),
+			filepath.Join(ei.Dir, md.Namer.Next(ei)),
 		)
-		if err != nil {
-			return err
-		}
-		return nil
 	}
 
-	return internal.DoBatchWrapper(md.SrcDir, bm, filter, handler)
+	return impl.DoBatchWrapper(md.SrcDir, bm, filter, handler)
 }
 
 func DoBatchWithFlags(fs *flag.FlagSet, args []string) error {
@@ -65,6 +59,12 @@ func DoBatchWithFlags(fs *flag.FlagSet, args []string) error {
 		"ext",
 		"",
 		"Filter files by extension.",
+	)
+
+	rec := fs.Bool(
+		"rec",
+		false,
+		"Recursive.",
 	)
 
 	strict := fs.Bool(
@@ -86,6 +86,7 @@ func DoBatchWithFlags(fs *flag.FlagSet, args []string) error {
 		SrcDir:   *srcDir,
 		Basename: *basename,
 		Ext:      *ext,
+		Rec:      *rec,
 		Strict:   *strict,
 	}
 

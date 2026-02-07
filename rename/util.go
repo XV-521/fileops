@@ -2,13 +2,9 @@ package rename
 
 import (
 	"fmt"
-	"os"
-	"strings"
+	"github.com/XV-521/fileops/core"
+	"github.com/XV-521/fileops/internal/util"
 )
-
-type Namer interface {
-	Next(info os.FileInfo) string
-}
 
 type nameGen struct {
 	basename string
@@ -16,11 +12,11 @@ type nameGen struct {
 	count    int
 }
 
-func (ng *nameGen) Next(_ os.FileInfo) string {
+func (ng *nameGen) Next(_ core.EntryInfo) string {
 	ng.count += 1
 	name := fmt.Sprintf("%v%v", ng.basename, ng.count)
 	if ng.ext != "" {
-		name = fmt.Sprintf("%v.%v", name, strings.Trim(ng.ext, "."))
+		name = fmt.Sprintf("%v%v", name, util.GetClearExt(ng.ext))
 	}
 	return name
 }

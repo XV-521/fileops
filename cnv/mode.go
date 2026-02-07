@@ -2,14 +2,18 @@ package cnv
 
 import (
 	"fmt"
+	"github.com/XV-521/fileops/core/mode"
+	"github.com/XV-521/fileops/internal/util"
 	"os"
 )
 
 type Mode struct {
 	SrcDir  string
 	DstDir  string
+	CT      mode.CnvType
 	FromExt string
 	ToExt   string
+	Rec     bool
 	Strict  bool
 }
 
@@ -24,8 +28,11 @@ func (md *Mode) Check() error {
 	if md.DstDir == "" {
 		return fmt.Errorf("md.DstDir is empty")
 	}
-	if md.FromExt == "" {
-		return fmt.Errorf("md.FromExt is empty")
+	if md.FromExt == "" && md.CT == mode.CnvUn {
+		return fmt.Errorf("md.FromExt is empty and md.CT is CnvUn")
+	}
+	if md.FromExt != "" && md.CT != mode.CnvUn {
+		return fmt.Errorf("md.FromExt is not empty and md.CT is not CnvUn")
 	}
 	if md.ToExt == "" {
 		return fmt.Errorf("md.ToExt is empty")
@@ -41,5 +48,13 @@ func (md *Mode) Normalize() (*Mode, error) {
 			return nil, err
 		}
 	}
+	if md.Rec && (md.SrcDir != md.DstDir) {
+		err := util.RecMkdirBySrc(md.SrcDir, md.DstDir)
+		if err != nil {
+			return nil, err
+		}
+	}
+	md.FromExt = util.GetClearExt(md.FromExt)
+	md.ToExt = util.GetClearExt(md.ToExt)
 	return md, nil
 }

@@ -5,7 +5,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"github.com/XV-521/fileops/internal"
+	"github.com/XV-521/fileops/internal/impl"
 	"os"
 	"path/filepath"
 	"strings"
@@ -57,7 +57,7 @@ func getOpsBaseName(data []byte) (string, error) {
 
 func Highlight(md *Mode) error {
 
-	md, err := internal.Prepare(md)
+	md, err := impl.Prepare(md)
 	if err != nil {
 		return err
 	}
@@ -129,12 +129,12 @@ func HighlightWithFlags(fs *flag.FlagSet, args []string) error {
 	)
 	style := fs.String(
 		"style",
-		"nord",
-		"Highlight style. Recommended: xcode (none), trac (none), dracula (#282A36), gruvbox-dark (#282828)",
+		"xcode",
+		"Highlight style. Recommended: xcode, none; trac, none; dracula, #282A36; gruvbox-dark, #282828.",
 	)
 	bgColor := fs.String(
 		"bg",
-		"#303742",
+		"",
 		"Background color (hex).",
 	)
 

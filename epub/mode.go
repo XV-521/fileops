@@ -2,7 +2,7 @@ package epub
 
 import (
 	"fmt"
-	"github.com/XV-521/fileops/internal"
+	"github.com/XV-521/fileops/internal/util"
 	"path/filepath"
 )
 
@@ -15,7 +15,7 @@ type Mode struct {
 	Lang           string
 	Style          string
 	BgColor        string
-	CssBasename    string
+	CssName        string
 }
 
 func (md *Mode) Check() error {
@@ -35,17 +35,17 @@ func (md *Mode) Normalize() (*Mode, error) {
 
 	if md.DstDir == "" {
 		dir := filepath.Dir(md.SrcPath)
-		name := "inner" + internal.GetRand(6)
+		name := "inner" + util.GetRand(6)
 		md.DstDir = filepath.Join(dir, name)
 	}
 
 	if md.Style == "" {
-		md.Style = "tango"
+		md.Style = "xcode"
 	}
 
-	if md.CssBasename == "" {
-		name := "highlight" + internal.GetRand(6)
-		md.CssBasename = fmt.Sprintf("%v%v", name, ".css")
+	if md.CssName == "" {
+		basename := "highlight" + util.GetRand(6)
+		md.CssName = fmt.Sprintf("%v%v", basename, ".css")
 	}
 
 	return md, nil

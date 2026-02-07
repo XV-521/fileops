@@ -2,14 +2,17 @@ package rename
 
 import (
 	"fmt"
+	"github.com/XV-521/fileops/core"
+	"github.com/XV-521/fileops/internal/util"
 	"os"
 )
 
 type Mode struct {
 	SrcDir   string
 	Basename string
-	Namer    Namer
+	Namer    core.Namer
 	Ext      string
+	Rec      bool
 	Strict   bool
 }
 
@@ -31,6 +34,7 @@ func (md *Mode) Check() error {
 }
 
 func (md *Mode) Normalize() (*Mode, error) {
+	md.Ext = util.GetClearExt(md.Ext)
 	if md.Namer == nil {
 		md.Namer = &nameGen{
 			basename: md.Basename,

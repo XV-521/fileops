@@ -1,4 +1,4 @@
-package internal
+package util
 
 import (
 	"os/exec"
@@ -6,17 +6,20 @@ import (
 )
 
 func Zip(srcPath string, dstPath string, pwd string) error {
-	args := []string{"-r", "-X"}
+	args := []string{"a", "-tzip", "-xr!.DS_Store", "-xr!__MACOSX"}
+
 	if pwd != "" {
-		args = append(args, "-P", pwd)
+		args = append(args, "-p"+pwd)
 	}
+
 	args = append(args, dstPath, filepath.Base(srcPath))
-	cmd := exec.Command("zip", args...)
+
+	cmd := exec.Command("7z", args...)
 	cmd.Dir = filepath.Dir(srcPath)
 	return CmdWrapper(cmd)
 }
 
-func SevenZip(srcPath string, dstPath string, pwd string) error {
+func Seven(srcPath string, dstPath string, pwd string) error {
 	args := []string{"a", "-xr!.DS_Store", "-xr!__MACOSX"}
 
 	if pwd != "" {
@@ -30,7 +33,7 @@ func SevenZip(srcPath string, dstPath string, pwd string) error {
 	return CmdWrapper(cmd)
 }
 
-func TarZip(srcPath string, dstPath string, _ string) error {
+func Tar(srcPath string, dstPath string, _ string) error {
 	args := []string{
 		"-czf", dstPath,
 		"--exclude=.DS_Store",
@@ -42,6 +45,7 @@ func TarZip(srcPath string, dstPath string, _ string) error {
 	return CmdWrapper(cmd)
 }
 
+// Deprecated: use SevenUnzip instead.
 func Unzip(srcPath string, dstDir string, pwd string) error {
 	var args []string
 	if pwd != "" {
@@ -52,7 +56,7 @@ func Unzip(srcPath string, dstDir string, pwd string) error {
 	return CmdWrapper(cmd)
 }
 
-func SevenUnzip(srcPath string, dstDir string, pwd string) error {
+func UnSeven(srcPath string, dstDir string, pwd string) error {
 	args := []string{"x", srcPath, "-o" + dstDir}
 	if pwd != "" {
 		args = append(args, "-p"+pwd)
@@ -61,13 +65,13 @@ func SevenUnzip(srcPath string, dstDir string, pwd string) error {
 	return CmdWrapper(cmd)
 }
 
-func TarUnzip(srcPath string, dstDir string, _ string) error {
+func UnTar(srcPath string, dstDir string, _ string) error {
 	args := []string{"-xf", srcPath, "-C", dstDir}
 	cmd := exec.Command("tar", args...)
 	return CmdWrapper(cmd)
 }
 
-func RarUnzip(srcPath string, dstDir string, pwd string) error {
+func UnRar(srcPath string, dstDir string, pwd string) error {
 	args := []string{srcPath, "-o", dstDir}
 	if pwd != "" {
 		args = append(args, "-p", pwd)

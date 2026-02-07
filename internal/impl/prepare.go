@@ -1,4 +1,4 @@
-package internal
+package impl
 
 type Preparer[T any] interface {
 	Check() error

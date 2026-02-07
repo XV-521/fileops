@@ -3,14 +3,17 @@ package epub
 import (
 	"bytes"
 	"fmt"
-	"github.com/XV-521/fileops/internal"
-	goHtml "golang.org/x/net/html"
+	"github.com/XV-521/fileops/core"
 	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"regexp"
 	"strings"
+
+	"github.com/XV-521/fileops/internal/impl"
+	"github.com/XV-521/fileops/internal/util"
+	goHtml "golang.org/x/net/html"
 )
 
 func generateCSS(dstPath string, md *Mode) error {
@@ -164,7 +167,7 @@ func getHighlightedHtml(html string, md *Mode) string {
 				return m
 			}
 
-			if !LooksLikeCode(codeText) {
+			if !util.LooksLikeCode(codeText) {
 				return m
 			}
 
@@ -181,12 +184,11 @@ func getHighlightedHtml(html string, md *Mode) string {
 }
 
 func highlightHtml(
-	srcPath string,
-	dstPath string,
+	path string,
 	cssPath string,
 	md *Mode,
 ) error {
-	data, err := os.ReadFile(srcPath)
+	data, err := os.ReadFile(path)
 	if err != nil {
 		return err
 	}
@@ -195,7 +197,7 @@ func highlightHtml(
 	html = getCssLinkedHtml(html, cssPath)
 	html = getHighlightedHtml(html, md)
 
-	err = os.WriteFile(dstPath, []byte(html), 0644)
+	err = os.WriteFile(path, []byte(html), 0644)
 	if err != nil {
 		return err
 	}
@@ -234,40 +236,41 @@ func highlightAllHtml(
 	md *Mode,
 ) error {
 
-	bm := internal.BatchMode{
+	bm := impl.BatchMode{
 		Sem:    8,
+		Rec:    false,
 		Strict: md.Strict,
 	}
 
-	filter := func(entry os.DirEntry) bool {
-		if entry.IsDir() {
+	filter := func(ei core.EntryInfo) bool {
+		if ei.IsDir() {
 			return false
 		}
 
-		filename := entry.Name()
-		if !(internal.IsThisExt(filename, "html") ||
-			internal.IsThisExt(filename, "xhtml") ||
-			internal.IsThisExt(filename, "opf")) {
+		filename := ei.Name()
+		if !(util.IsThisExt(filename, ".html") ||
+			util.IsThisExt(filename, ".xhtml") ||
+			util.IsThisExt(filename, ".opf")) {
 			return false
 		}
 		return true
 	}
 
-	handler := func(entry os.DirEntry) error {
+	handler := func(ei core.EntryInfo) error {
 
-		filename := entry.Name()
-		path := filepath.Join(srcDir, filename)
+		filename := ei.Name()
+		path := ei.Path()
 
-		if internal.IsThisExt(filename, "html") || internal.IsThisExt(filename, "xhtml") {
-			return highlightHtml(path, path, cssPath, md)
+		if util.IsThisExt(filename, ".html") || util.IsThisExt(filename, ".xhtml") {
+			return highlightHtml(path, cssPath, md)
 		}
-		if internal.IsThisExt(filename, "opf") {
+		if util.IsThisExt(filename, ".opf") {
 			return generateOpf(path, cssPath)
 		}
 		return nil
 	}
 
-	return internal.DoBatchWrapper(srcDir, bm, filter, handler)
+	return impl.DoBatchWrapper(srcDir, bm, filter, handler)
 }
 
 func HighlightAllHtml(
@@ -275,7 +278,7 @@ func HighlightAllHtml(
 	md *Mode,
 ) error {
 
-	cssPath := filepath.Join(srcDir, md.CssBasename)
+	cssPath := filepath.Join(srcDir, md.CssName)
 
 	_, err := os.Stat(cssPath)
 	if os.IsNotExist(err) {

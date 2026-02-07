@@ -1,4 +1,4 @@
-package img
+package mapdir
 
 import (
 	"fmt"
@@ -8,10 +8,6 @@ import (
 type Mode struct {
 	SrcDir string
 	DstDir string
-	Ext    string
-	Rto    float64
-	DPI    float64
-	Strict bool
 }
 
 func (md *Mode) Check() error {
@@ -24,9 +20,6 @@ func (md *Mode) Check() error {
 	}
 	if md.DstDir == "" {
 		return fmt.Errorf("md.DstDir is empty")
-	}
-	if md.Ext == "" {
-		return fmt.Errorf("ext is empty")
 	}
 	return nil
 }
