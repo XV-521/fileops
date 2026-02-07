@@ -1,6 +1,6 @@
 # fileops
 
-A collection of small utilities I use for batch file operations.
+A small collection of utilities for batch file operations.
 
-This project is primarily for personal use.
-The API may change at any time.
+This project is mainly for personal use.
+The API is not guaranteed to be stable and may change at any time.
