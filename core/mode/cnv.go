@@ -13,6 +13,7 @@ const (
 	CnvV
 	CnvA
 	CnvI
+	CnvS
 )
 
 var UnsupportedCnvTypeErr = errors.New("unsupported cnv type")
@@ -42,6 +43,10 @@ func GetCnvType(name string) CnvType {
 		strings.HasSuffix(name, ".avif"),
 		strings.HasSuffix(name, ".gif"):
 		return CnvI
+	case strings.HasSuffix(name, ".srt"),
+		strings.HasSuffix(name, ".vtt"),
+		strings.HasSuffix(name, ".ass"):
+		return CnvS
 
 	default:
 		return CnvUn
@@ -54,11 +59,13 @@ func GetCnvFn(ct CnvType) (CnvFn, error) {
 
 	switch ct {
 	case CnvV:
-		return util.CnvForVideo, nil
+		return util.CnvToVideo, nil
 	case CnvA:
-		return util.CnvForAudio, nil
+		return util.CnvToAudio, nil
 	case CnvI:
-		return util.CnvForImage, nil
+		return util.CnvToImage, nil
+	case CnvS:
+		return util.CnvToSub, nil
 
 	default:
 		return nil, UnsupportedCnvTypeErr

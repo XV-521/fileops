@@ -120,7 +120,7 @@ func HighlightWithFlags(fs *flag.FlagSet, args []string) error {
 	tag := fs.String(
 		"tag",
 		"",
-		"HTML tag name. Required when --sco is enabled.",
+		"HTML tag name. Required when --sco is not enabled.",
 	)
 	lang := fs.String(
 		"lang",

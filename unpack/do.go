@@ -73,24 +73,24 @@ func DoBatch(md *Mode) error {
 
 		path := ei.Path()
 
-		dstName, err := createUniqueName(ei.Dir, ent{name: ei.Basename(), asDir: true})
+		var dir string
+
+		creator := func(uniquePath string) error {
+			dir = uniquePath
+			return os.Mkdir(uniquePath, 0777)
+		}
+
+		err = util.CreateUniqueDir(ei.Dir, ei.Basename(), creator)
 		if err != nil {
 			return err
 		}
 
-		dst := filepath.Join(ei.Dir, dstName)
-
-		err = os.Mkdir(dst, 0777)
+		err = unzipFn(path, dir, md.Pwd)
 		if err != nil {
 			return err
 		}
 
-		err = unzipFn(path, dst, md.Pwd)
-		if err != nil {
-			return err
-		}
-
-		entries, err := os.ReadDir(dst)
+		entries, err := os.ReadDir(dir)
 		if err != nil {
 			return err
 		}
@@ -98,7 +98,7 @@ func DoBatch(md *Mode) error {
 		numEntries := len(entries)
 		switch numEntries {
 		case 0:
-			err := undress(dst)
+			err := util.Undress(dir)
 			if err != nil {
 				return err
 			}
@@ -107,17 +107,16 @@ func DoBatch(md *Mode) error {
 			name := entry.Name()
 			packType := mode.GetPackType(name)
 			if packType != mode.PackUn {
-				qs.append(dst)
+				qs.append(dir)
 				break
 			}
-			err = undress(dst)
+			err = util.Undress(dir)
 			if err != nil {
 				return err
 			}
 		default:
-			qs.append(dst)
+			qs.append(dir)
 		}
-
 		return os.Remove(path)
 	}
 
@@ -147,7 +146,7 @@ func DoBatch(md *Mode) error {
 		return err
 	}
 
-	return undress(dstDir)
+	return util.Undress(dstDir)
 }
 
 func DoBatchWithFlags(fs *flag.FlagSet, args []string) error {

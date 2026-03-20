@@ -22,6 +22,17 @@ func DoBatch(md *Mode) error {
 		return fmt.Sprintf("%v%v", basename, md.ToExt)
 	}
 
+	var ct mode.CnvType
+	if md.CT != mode.CnvUn {
+		ct = md.CT
+	} else {
+		ct = mode.GetCnvType(fmt.Sprintf("file%v", md.ToExt))
+	}
+	cvFn, err := mode.GetCnvFn(ct)
+	if err != nil {
+		return err
+	}
+
 	bm := impl.BatchMode{
 		Sem:    6,
 		Rec:    md.Rec,
@@ -51,19 +62,6 @@ func DoBatch(md *Mode) error {
 		}
 
 		dstPath := filepath.Join(dstDir, getNewName(name))
-
-		var ct mode.CnvType
-
-		if md.CT != mode.CnvUn {
-			ct = md.CT
-		} else {
-			ct = mode.GetCnvType(name)
-		}
-
-		cvFn, err := mode.GetCnvFn(ct)
-		if err != nil {
-			return err
-		}
 		return cvFn(ei.Path(), dstPath)
 	}
 
@@ -85,7 +83,7 @@ func DoBatchWithFlags(fs *flag.FlagSet, args []string) error {
 	ct := fs.Int(
 		"ct",
 		int(mode.CnvUn),
-		fmt.Sprintf("Zip type: { %v: video, %v: audio, %v: image }", mode.CnvV, mode.CnvA, mode.CnvI),
+		fmt.Sprintf("Cnv type: { %v: video, %v: audio, %v: image }", mode.CnvV, mode.CnvA, mode.CnvI),
 	)
 
 	fromExt := fs.String(

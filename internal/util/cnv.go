@@ -4,7 +4,7 @@ import (
 	"os/exec"
 )
 
-func CnvForVideo(srcPath, dstPath string) error {
+func CnvToVideo(srcPath, dstPath string) error {
 	cmd := exec.Command(
 		"ffmpeg",
 		"-y",
@@ -18,19 +18,29 @@ func CnvForVideo(srcPath, dstPath string) error {
 	return CmdWrap(cmd)
 }
 
-func CnvForAudio(srcPath, dstPath string) error {
+func CnvToAudio(srcPath, dstPath string) error {
 	cmd := exec.Command(
 		"ffmpeg",
 		"-y",
 		"-i", srcPath,
 		"-vn",
-		"-c:a", "aac",
 		dstPath,
 	)
 	return CmdWrap(cmd)
 }
 
-func CnvForImage(srcPath string, dstPath string) error {
+func CnvToImage(srcPath string, dstPath string) error {
+	cmd := exec.Command(
+		"ffmpeg",
+		"-y",
+		"-i", srcPath,
+		"-vframes", "1",
+		dstPath,
+	)
+	return CmdWrap(cmd)
+}
+
+func CnvToSub(srcPath string, dstPath string) error {
 	cmd := exec.Command(
 		"ffmpeg",
 		"-y",
